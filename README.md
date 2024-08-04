@@ -28,6 +28,7 @@ User Progress Nutrition  : `GET /profile/nutrition/progress/:userId`\
 
 **- Food Route** \
 Food Nutrition Text Tracker      : `POST /food/nutrition`\
+Food Nutrition Image Tracker     : `POST /food/nutrition/image`\
 Food Recommendation              : `GET /food/recommendation`\
 
 **- History Route** \
@@ -61,6 +62,12 @@ height            Float
 ```
 userId              (string, required)
 foodName            (string, required)
+```
+
+**- Food Nutrition Image Route**
+```
+userId              (string, required)
+base64image         (string, required)
 ```
 
 **- History Route**
