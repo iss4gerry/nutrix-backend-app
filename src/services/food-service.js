@@ -40,7 +40,44 @@ const textTracker = async (foodName) => {
     }) 
 }
 
-const nutritionTracker = async (body, userId) => {
+const imageTracker = (image) => {
+    return new Promise((resolve, reject) => {
+        if(!image) {
+            reject(new Error('no image provided'))
+        }else{
+            const data = {
+                inlineData: {
+                    data: image,
+                    mimeType: 'image/jpeg'
+                }
+            }
+
+            const model = genAi.getGenerativeModel({ model: "gemini-1.5-flash" })
+            const prompt = `Makanan apa ini? 
+            send response with string like bellow, your entire response/output is going to consist of a single string object {}, and you will NOT wrap it within JSON md markers 
+            {
+                "foodName": "{food_name}"
+            }
+            `
+
+            return model.generateContent([prompt, data])
+                .then(result => result.response.text())
+                .then(result => resolve(JSON.parse(result)))
+                .catch(err => reject(err))
+        }
+    })
+}
+
+const imageNutritionTracker = async (foodImg, userId) => {
+    const { foodName } = await imageTracker(foodImg)
+    console.log(foodName)
+    const nutrition = await nutritionTracker(foodName, userId)
+    console.log(nutrition)
+
+    return nutrition
+}
+
+const nutritionTracker = async (foodName, userId) => {
 
     try {
         const nutrition = await prisma.nutrition.findFirst({
@@ -74,7 +111,7 @@ const nutritionTracker = async (body, userId) => {
             })
         }
         
-        const food = await textTracker(body.foodName)
+        const food = await textTracker(foodName)
         if(food){
             const nutrition = await prisma.nutrition.findFirst({
                 where: {
@@ -198,5 +235,6 @@ const getFoodRecommendation = async(userId) => {
 module.exports = {
     textTracker,
     nutritionTracker,
-    getFoodRecommendation
+    getFoodRecommendation,
+    imageNutritionTracker
 }
