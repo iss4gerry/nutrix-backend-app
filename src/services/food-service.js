@@ -70,7 +70,6 @@ const imageTracker = (image) => {
 
 const imageNutritionTracker = async (foodImg, userId) => {
     const { foodName } = await imageTracker(foodImg)
-    console.log(foodName)
     const nutrition = await nutritionTracker(foodName, userId)
     console.log(nutrition)
 

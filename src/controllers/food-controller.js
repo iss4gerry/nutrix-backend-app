@@ -23,7 +23,7 @@ const getFoodRecommendation = catchAsync(async (req, res) => {
 })
 
 const imageTracker = catchAsync (async (req, res) => {
-    const result = await foodService.imageTracker(req.body.foodImage, req.body.userId)
+    const result = await foodService.imageNutritionTracker(req.body.base64Image, req.body.userId)
 
     res.status(httpStatus.OK).send({
         status: httpStatus.OK,
